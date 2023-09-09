@@ -47,7 +47,7 @@ contract CheckpointHub {
     }
 
     // Function to mark a checkpoint as completed for a racer
-    function completeCheckpoint(uint256 checkpointIndex, address racer) public {
+    function completeCheckpoint(uint256 checkpointIndex) public {
         require(
             checkpointIndex < checkpoints.length,
             "Checkpoint does not exist."
@@ -58,7 +58,7 @@ contract CheckpointHub {
         require(checkpoint.initialized, "Checkpoint is not initialized.");
 
         // Mark the checkpoint as completed for the racer (you can replace `true` with `false` to mark it as not completed)
-        setCompletionStatus(checkpoint, racer, true);
+        setCompletionStatus(checkpoint, msg.sender, true);
     }
 
     // Function to get the data of a checkpoint
