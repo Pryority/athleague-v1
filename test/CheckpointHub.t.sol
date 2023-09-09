@@ -15,16 +15,33 @@ contract CheckpointTest is Test {
         bob = makeAddr("B0B");
     }
 
-    // // Property-based test for checkpoint completion consistency
-    // function testFuzz_CheckpointCompletionConsistency(uint96 amount) public {
-    //     // Initialize your contract state and checkpoints here
-    //     ch.addCheckpoint(-404040404, 808080808, 0x48656c6c6f2c20576f726c6421);
-    //     // Use 'amount' or other parameters as input data
-    //     // Perform actions on the contract, e.g., adding checkpoints, marking as completed, etc.
-    //     // Check the property you defined, e.g., consistency in checkpoint completion
-    //     // Use 'assert' or other validation mechanisms to check the property
-    // }
     // Property-based test for checkpoint completion consistency
+    function testFuzz_CheckpointCompletionConsistency(
+        int32 lat,
+        int32 long,
+        uint128 data,
+        address racer
+    ) public {
+        // Initialize your contract state and checkpoints here
+        vm.assume(lat >= -90);
+        require(lat >= -90);
+        vm.assume(lat <= 90);
+        require(lat <= 90);
+        vm.assume(long >= -90);
+        require(long >= -90);
+        vm.assume(long <= 90);
+        require(long <= 90);
+        ch.addCheckpoint(lat, long, data);
+
+        vm.startPrank(racer);
+        vm.assume(racer != owner);
+        ch.completeCheckpoint(0);
+        vm.expectRevert("Only the owner can add checkpoints.");
+        ch.addCheckpoint(lat, long, data);
+        vm.stopPrank();
+    }
+
+    // Property-based test for adding a checkpoint
     function testFuzz_AddCheckpoint(
         int32 lat,
         int32 long,
