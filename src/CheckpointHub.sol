@@ -30,6 +30,10 @@ contract CheckpointHub {
     function addCheckpoint(int32 lat, int32 long, uint128 data) public {
         require(msg.sender == owner, "Only the owner can add checkpoints.");
 
+        // Ensure that latitude and longitude values are within the valid range
+        require(lat >= -90 && lat <= 90, "Latitude out of range.");
+        require(long >= -90 && long <= 90, "Longitude out of range.");
+
         // Create a new checkpoint with the provided parameters and initialize it
         Checkpoint memory newCheckpoint = Checkpoint({
             packedCoordinates: packCoordinates(lat, long),
